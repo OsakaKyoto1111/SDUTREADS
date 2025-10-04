@@ -1,12 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"myapp/internal/controller"
 	"myapp/internal/middleware"
 	"myapp/internal/model"
 	"myapp/internal/repository"
 	"myapp/internal/service"
+	"os"
 
 	"github.com/labstack/echo/v4"
 	"gorm.io/driver/postgres"
@@ -14,7 +16,15 @@ import (
 )
 
 func main() {
-	dsn := "host=localhost user=myuser password=mypassword dbname=myapp port=5432 sslmode=disable"
+	dsn := fmt.Sprintf(
+		"host=%s user=%s password=%s dbname=%s port=%s sslmode=%s",
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_NAME"),
+		os.Getenv("DB_PORT"),
+		os.Getenv("SSL_MODE"),
+	)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("❌ DB connection failed:", err)
